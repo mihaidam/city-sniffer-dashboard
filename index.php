@@ -13,6 +13,10 @@
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
+<?php
+  require 'settings.php';
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -473,7 +477,7 @@
     </div>
     <!-- Page content -->
 
-        <!-- <div class="col">
+    <!-- <div class="col">
           <div class="card border-0">
             <div id="mapid" class="map-canvas" data-lat="40.748817" data-lng="-73.985428"></div>
           </div>
@@ -650,9 +654,9 @@
       <script src="assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
       <script src="assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
       <!-- Optional JS -->
-      <script src="assets/vendor/chart.js/dist/Chart.min.js"></script>
+      <!-- <script src="assets/vendor/chart.js/dist/Chart.min.js"></script>
       <script src="assets/vendor/chart.js/dist/Chart.extension.js"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDTTfWur0PDbZWPr7Pmq8K3jiDp0_xUziI"></script> -->
       <!-- Argon JS -->
       <script src="assets/js/argon.js?v=1.2.0"></script>
       <!-- Chart JS -->
@@ -708,18 +712,39 @@
 
       <script type="text/javascript">
         var ctx = document.getElementById('myChart').getContext('2d');
+
+        var lat = [];
+        <?php
+        $sql = "SELECT lat FROM sensors";// WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli -> query($sql)) {
+          $names = $mysqli -> query($sql);
+          if ($names -> num_rows > 0) {
+
+            while ($city = $names -> fetch_assoc()) {
+              echo "lat.push(".$city["lat"].");";
+            }
+
+          }
+
+        }
+?>
+
         var chart = new Chart(ctx, {
           // The type of chart we want to create
           type: 'line',
 
           // The data for our dataset
+
+
+
           data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            labels: ['January', 'February'],//, 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
               label: 'My First dataset',
               backgroundColor: 'rgb(255, 99, 132)',
               borderColor: 'rgb(255, 99, 132)',
-              data: [0, 10, 5, 2, 20, 30, 45]
+              // data: [0, 10, 5, 2, 20, 30, 45]
+              data: lat
             }]
           },
 
