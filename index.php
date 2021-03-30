@@ -14,7 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
 <?php
-  require 'settings.php';
+require 'settings.php';
 ?>
 
 <!DOCTYPE html>
@@ -37,12 +37,8 @@
   <!-- Argon CSS -->
   <link rel="stylesheet" href="assets/css/argon.css?v=1.2.0" type="text/css">
   <!-- OpenStreetMaps -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-    crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-    crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
   <script src="./Leaflet.markercluster-1.4.1/dist/leaflet.markercluster.js" crossorigin=""></script>
   <link rel="stylesheet" href="./Leaflet.markercluster-1.4.1/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="./Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css" />
@@ -181,8 +177,7 @@
           <ul class="navbar-nav align-items-center  ml-md-auto ">
             <li class="nav-item d-xl-none">
               <!-- Sidenav toggler -->
-              <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin"
-                data-target="#sidenav-main">
+              <div class="pr-3 sidenav-toggler sidenav-toggler-dark" data-action="sidenav-pin" data-target="#sidenav-main">
                 <div class="sidenav-toggler-inner">
                   <i class="sidenav-toggler-line"></i>
                   <i class="sidenav-toggler-line"></i>
@@ -196,8 +191,7 @@
               </a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+              <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ni ni-bell-55"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-xl  dropdown-menu-right  py-0 overflow-hidden">
@@ -318,8 +312,7 @@
           </ul>
           <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
             <li class="nav-item dropdown">
-              <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+              <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="media align-items-center">
                   <span class="avatar avatar-sm rounded-circle">
                     <img alt="Image placeholder" src="assets/img/theme/team-4.jpg">
@@ -637,8 +630,7 @@
                     <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
                   </li> -->
                   <li class="nav-item">
-                    <a href="https://github.com/mihaidam/city-sniffer-dashboard/blob/main/LICENSE.md" class="nav-link"
-                      target="_blank">MIT License</a>
+                    <a href="https://github.com/mihaidam/city-sniffer-dashboard/blob/main/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
                   </li>
                 </ul>
               </div>
@@ -680,9 +672,34 @@
           //popupAnchor: [-3, -76],
         });
 
-        lat = [45.74736490675511]
-        lng = [21.23167193964277],
-          desc = ['UVT - marker test']
+        lat = [];
+        lng = [];
+
+        <?php
+        $sql = "SELECT lat FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "lat.push(" . $city["lat"] . ");";
+            }
+          }
+        }
+        ?>
+
+        <?php
+        $sql = "SELECT lng FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "lng.push(" . $city["lng"] . ");";
+            }
+          }
+        }
+        ?>
 
         var cont = 0;
         var markers = L.markerClusterGroup();
@@ -694,7 +711,7 @@
           var marker = L.marker([lat[cont], lng[cont]]);
           // }
 
-          marker.bindPopup(String(desc[cont]));
+          //marker.bindPopup(String(desc[cont]));
 
           markers.addLayer(marker);
 
@@ -707,7 +724,6 @@
         }
 
         mymap.addLayer(markers);
-
       </script>
 
       <script type="text/javascript">
@@ -715,19 +731,25 @@
 
         var lat = [];
         <?php
-        $sql = "SELECT lat FROM sensors";// WHERE authors='".$_SESSION['email']."' ";
-        if ($mysqli -> query($sql)) {
-          $names = $mysqli -> query($sql);
-          if ($names -> num_rows > 0) {
+        $sql = "SELECT data_senzor_1 FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
 
-            while ($city = $names -> fetch_assoc()) {
-              echo "lat.push(".$city["lat"].");";
+            while ($city = $names->fetch_assoc()) {
+              echo "lat.push(" . $city["data_senzor_1"] . ");";
             }
-
           }
-
         }
-?>
+        ?>
+
+        var label = [];
+        var num = 0;
+        for (el in lat) {
+          label.push(num);
+          num += 1;
+        }
+
 
         var chart = new Chart(ctx, {
           // The type of chart we want to create
@@ -738,7 +760,7 @@
 
 
           data: {
-            labels: ['January', 'February'],//, 'March', 'April', 'May', 'June', 'July'],
+            labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
               label: 'My First dataset',
               backgroundColor: 'rgb(255, 99, 132)',
