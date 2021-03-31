@@ -674,6 +674,7 @@ require 'settings.php';
 
         lat = [];
         lng = [];
+        descriere = [];
 
         <?php
         $sql = "SELECT lat FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
@@ -701,6 +702,19 @@ require 'settings.php';
         }
         ?>
 
+        <?php
+        $sql = "SELECT device_id FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "descriere.push('" . $city["device_id"] . "');";
+            }
+          }
+        }
+        ?>
+
         var cont = 0;
         var markers = L.markerClusterGroup();
         while (cont < lat.length) {
@@ -711,7 +725,7 @@ require 'settings.php';
           var marker = L.marker([lat[cont], lng[cont]]);
           // }
 
-          //marker.bindPopup(String(desc[cont]));
+          marker.bindPopup(String(descriere[cont]));
 
           markers.addLayer(marker);
 
