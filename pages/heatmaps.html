@@ -421,6 +421,10 @@
 
     mymap.addLayer(markers);
 
+    var heat = L.heatLayer([
+      [45.7478513, 21.2319454, 0.5] // lat, lng, intensity
+    ], {radius: 25}).addTo(mymap);
+
   </script>
 
 </body>
