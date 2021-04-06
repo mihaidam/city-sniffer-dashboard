@@ -43,6 +43,7 @@
   <link rel="stylesheet" href="../Leaflet.markercluster-1.4.1/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="../Leaflet.markercluster-1.4.1/dist/MarkerCluster.Default.css" />
   <script src="../Leaflet.markercluster-1.4.1/dist/leaflet.markercluster-src.js"></script>
+  <script src="../Leaflet.heat-gh-pages/dist/leaflet-heat.js"></script>
 </head>
 
 <body>
@@ -419,6 +420,10 @@
     }
 
     mymap.addLayer(markers);
+
+    var heat = L.heatLayer([
+      [45.7478513, 21.2319454, 0.5] // lat, lng, intensity
+    ], {radius: 25}).addTo(mymap);
 
   </script>
 
