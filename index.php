@@ -745,13 +745,13 @@ require 'settings.php';
         ?>
 
         <?php
-        $sql = "SELECT device_id FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
+        $sql = "SELECT label_data_senzor_1, data_senzor_1 FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
         if ($mysqli->query($sql)) {
           $names = $mysqli->query($sql);
           if ($names->num_rows > 0) {
 
             while ($city = $names->fetch_assoc()) {
-              echo "descriere.push('" . $city["device_id"] . "');";
+              echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
             }
           }
         }
@@ -838,13 +838,13 @@ require 'settings.php';
           ?>
 
           <?php
-          $sql = "SELECT device_id FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
           if ($mysqli->query($sql)) {
             $names = $mysqli->query($sql);
             if ($names->num_rows > 0) {
 
               while ($city = $names->fetch_assoc()) {
-                echo "descriere.push('" . $city["device_id"] . "');";
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
               }
             }
           }
@@ -934,13 +934,13 @@ require 'settings.php';
           ?>
 
           <?php
-          $sql = "SELECT device_id FROM sensors WHERE time >= CURRENT_TIMESTAMP - INTERVAL DAYOFWEEK(CURRENT_TIMESTAMP)+3 DAY"; // WHERE authors='".$_SESSION['email']."' ";
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= CURRENT_TIMESTAMP - INTERVAL DAYOFWEEK(CURRENT_TIMESTAMP)+3 DAY"; // WHERE authors='".$_SESSION['email']."' ";
           if ($mysqli->query($sql)) {
             $names = $mysqli->query($sql);
             if ($names->num_rows > 0) {
 
               while ($city = $names->fetch_assoc()) {
-                echo "descriere.push('" . $city["device_id"] . "');";
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
               }
             }
           }
@@ -1030,13 +1030,13 @@ require 'settings.php';
           ?>
 
           <?php
-          $sql = "SELECT device_id FROM sensors WHERE time >= CURRENT_TIMESTAMP - INTERVAL DAYOFWEEK(CURRENT_TIMESTAMP)+1 MONTH"; // WHERE authors='".$_SESSION['email']."' ";
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= CURRENT_TIMESTAMP - INTERVAL DAYOFWEEK(CURRENT_TIMESTAMP)+1 MONTH"; // WHERE authors='".$_SESSION['email']."' ";
           if ($mysqli->query($sql)) {
             $names = $mysqli->query($sql);
             if ($names->num_rows > 0) {
 
               while ($city = $names->fetch_assoc()) {
-                echo "descriere.push('" . $city["device_id"] . "');";
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
               }
             }
           }
@@ -1126,13 +1126,13 @@ require 'settings.php';
           ?>
 
           <?php
-          $sql = "SELECT device_id FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
           if ($mysqli->query($sql)) {
             $names = $mysqli->query($sql);
             if ($names->num_rows > 0) {
 
               while ($city = $names->fetch_assoc()) {
-                echo "descriere.push('" . $city["device_id"] . "');";
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
               }
             }
           }
