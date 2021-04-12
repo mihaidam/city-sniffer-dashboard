@@ -546,7 +546,7 @@ require 'settings.php';
               <div class="row align-items-center">
                 <div class="col">
                   <h6 class="text-uppercase text-muted ls-1 mb-1">Polution</h6>
-                  <h5 class="h3 mb-0">Monthly evolution</h5>
+                  <h5 class="h3 mb-0">Last 3 days</h5>
                 </div>
               </div>
             </div>
@@ -558,19 +558,19 @@ require 'settings.php';
               </div>
               <ul class="nav nav-pills justify-content-end">
                 <li class="nav-item mr-2 mr-md-0">
-                  <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab">
+                  <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab" id="filter_pm25">
                     <span class="d-none d-md-block">PM2.5</span>
                     <span class="d-md-none">PM</span>
                   </a>
                 </li>
                 <li class="nav-item mr-2 mr-md-0">
-                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_co2">
                     <span class="d-none d-md-block">CO<sub>2</sub></span>
                     <span class="d-md-none">CO<sub>2</sub></span>
                   </a>
                 </li>
                 <li class="nav-item mr-2 mr-md-0">
-                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_temp">
                     <span class="d-none d-md-block">Temperature</span>
                     <span class="d-md-none">T</span>
                   </a>
@@ -1168,27 +1168,31 @@ require 'settings.php';
 
       <script type="text/javascript">
         var ctx = document.getElementById('myChart').getContext('2d');
+        var canvas2 = document.getElementById('myChart');
 
-        var lat = [];
+        ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+        var sen_val = [];
+        var label = [];
+
         <?php
-        $sql = "SELECT data_senzor_1 FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'pm25' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
         if ($mysqli->query($sql)) {
           $names = $mysqli->query($sql);
           if ($names->num_rows > 0) {
 
             while ($city = $names->fetch_assoc()) {
-              echo "lat.push(" . $city["data_senzor_1"] . ");";
+              echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+              echo "label.push('" . $city["time"] . "');";
             }
           }
         }
         ?>
 
-        var label = [];
-        var num = 0;
-        for (el in lat) {
-          label.push(num);
-          num += 1;
-        }
+
+        // for (el in sen_val) {
+        //   label.push("pm 2.5");
+        // }
 
 
         var chart = new Chart(ctx, {
@@ -1202,17 +1206,162 @@ require 'settings.php';
           data: {
             labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
-              label: 'My First dataset',
+              label: 'PM 2.5',
               backgroundColor: 'rgb(255, 99, 132)',
               borderColor: 'rgb(255, 99, 132)',
               // data: [0, 10, 5, 2, 20, 30, 45]
-              data: lat
+              data: sen_val
             }]
           },
 
           // Configuration options go here
           options: {}
         });
+
+        var filter_pm25_event = document.getElementById('filter_pm25');
+
+        filter_pm25_event.onclick = function() {
+
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'pm25' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'PM 2.5',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_co2_event = document.getElementById('filter_co2');
+
+        filter_co2_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'co2' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'CO2',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_temp_event = document.getElementById('filter_temp');
+
+        filter_temp_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'temp' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'temp',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
       </script>
 
 
