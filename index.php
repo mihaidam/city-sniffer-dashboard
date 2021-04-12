@@ -479,7 +479,7 @@ require 'settings.php';
 
     <div class="container-fluid mt--6">
       <div class="row">
-        <div class="col-xl-8">
+        <div class="col-xl-6">
           <div class="card bg-default">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
@@ -499,13 +499,35 @@ require 'settings.php';
                         <span class="d-md-none">M</span>
                       </a>
                     </li>
-                    <li class="nav-item" data-toggle="chart" data-target="#chart-sales-dark" data-update='{"data":{"datasets":[{"data":[0, 20, 5, 25, 10, 30, 15, 40, 40]}]}}' data-prefix="$" data-suffix="k">
-                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab">
-                        <span class="d-none d-md-block">Week</span>
-                        <span class="d-md-none">W</span>
+                  </ul> -->
+                  <ul class="nav nav-pills justify-content-end">
+                  </ul>
+                  <ul class="nav nav-pills justify-content-end">
+                    <li class="nav-item mr-2 mr-md-0">
+                      <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab" id="filter_1h">
+                        <span class="d-none d-md-block">Last hour</span>
+                        <span class="d-md-none">1h</span>
                       </a>
                     </li>
-                  </ul> -->
+                    <li class="nav-item mr-2 mr-md-0">
+                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_12h">
+                        <span class="d-none d-md-block">Last 12h</span>
+                        <span class="d-md-none">12h</span>
+                      </a>
+                    </li>
+                    <li class="nav-item mr-2 mr-md-0">
+                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_today">
+                        <span class="d-none d-md-block">Today</span>
+                        <span class="d-md-none">T</span>
+                      </a>
+                    </li>
+                    <li class="nav-item mr-2 mr-md-0">
+                      <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_3day">
+                        <span class="d-none d-md-block">Past 3 days</span>
+                        <span class="d-md-none">3d</span>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -518,13 +540,13 @@ require 'settings.php';
             <!-- </div> -->
           </div>
         </div>
-        <div class="col-xl-4">
+        <div class="col-xl-6">
           <div class="card">
             <div class="card-header bg-transparent">
               <div class="row align-items-center">
                 <div class="col">
                   <h6 class="text-uppercase text-muted ls-1 mb-1">Polution</h6>
-                  <h5 class="h3 mb-0">Monthly evolution</h5>
+                  <h5 class="h3 mb-0">Last 3 days</h5>
                 </div>
               </div>
             </div>
@@ -534,6 +556,26 @@ require 'settings.php';
                 <!-- <canvas id="chart-bars" class="chart-canvas"></canvas> -->
                 <canvas id="myChart"></canvas>
               </div>
+              <ul class="nav nav-pills justify-content-end">
+                <li class="nav-item mr-2 mr-md-0">
+                  <a href="#" class="nav-link py-2 px-3 active" data-toggle="tab" id="filter_pm25">
+                    <span class="d-none d-md-block">PM2.5</span>
+                    <span class="d-md-none">PM</span>
+                  </a>
+                </li>
+                <li class="nav-item mr-2 mr-md-0">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_co2">
+                    <span class="d-none d-md-block">CO<sub>2</sub></span>
+                    <span class="d-md-none">CO<sub>2</sub></span>
+                  </a>
+                </li>
+                <li class="nav-item mr-2 mr-md-0">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_temp">
+                    <span class="d-none d-md-block">Temperature</span>
+                    <span class="d-md-none">T</span>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -677,7 +719,7 @@ require 'settings.php';
         descriere = [];
 
         <?php
-        $sql = "SELECT lat FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        $sql = "SELECT lat FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
         if ($mysqli->query($sql)) {
           $names = $mysqli->query($sql);
           if ($names->num_rows > 0) {
@@ -690,7 +732,7 @@ require 'settings.php';
         ?>
 
         <?php
-        $sql = "SELECT lng FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        $sql = "SELECT lng FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
         if ($mysqli->query($sql)) {
           $names = $mysqli->query($sql);
           if ($names->num_rows > 0) {
@@ -703,13 +745,13 @@ require 'settings.php';
         ?>
 
         <?php
-        $sql = "SELECT device_id FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        $sql = "SELECT label_data_senzor_1, data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
         if ($mysqli->query($sql)) {
           $names = $mysqli->query($sql);
           if ($names->num_rows > 0) {
 
             while ($city = $names->fetch_assoc()) {
-              echo "descriere.push('" . $city["device_id"] . "');";
+              echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
             }
           }
         }
@@ -738,31 +780,419 @@ require 'settings.php';
         }
 
         mymap.addLayer(markers);
+
+        var filter_1h_event = document.getElementById('filter_1h');
+
+        filter_1h_event.onclick = function() {
+          mymap.eachLayer(function(layer) {
+            mymap.removeLayer(layer)
+          });
+
+          //var mymap = L.map('mapid').setView([45.7478513, 21.2319454], 13);
+          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiZGFtaWFuMDAiLCJhIjoiY2todDdlemNhMHJmdzJybGhydXg5aTd3dSJ9.2JIcaaVIJIIDaSNkqSMQzA'
+          }).addTo(mymap);
+
+          var myIcon = L.icon({
+            iconUrl: './media/info.png',
+            iconSize: [38, 38],
+            //iconAnchor: [22, 94],
+            //popupAnchor: [-3, -76],
+          });
+
+          lat = [];
+          lng = [];
+          descriere = [];
+
+          <?php
+          $sql = "SELECT lat FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"; //CURRENT_TIMESTAMP - INTERVAL DAYOFWEEK(CURRENT_TIMESTAMP)+3 DAY"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lat.push(" . $city["lat"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT lng FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lng.push(" . $city["lng"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
+              }
+            }
+          }
+          ?>
+
+          var cont = 0;
+
+          var markers = null;
+          markers = L.markerClusterGroup();
+          while (cont < lat.length) {
+            // if (tip[cont] != 'w') {
+            //   var marker = L.marker([lat[cont], lng[cont]], { icon: myIcon });
+            // }
+            // else {
+            var marker = L.marker([lat[cont], lng[cont]]);
+            // }
+
+            marker.bindPopup(String(descriere[cont]));
+
+            markers.addLayer(marker);
+
+            // var popup = L.popup()
+            // .setLatLng([lat[cont], lng[cont]])
+            // .setContent("test")
+            // .openOn(mymap);
+
+            cont++;
+          }
+
+          mymap.addLayer(markers);
+
+          return false;
+        }
+
+        var filter_12h_event = document.getElementById('filter_12h');
+
+        filter_12h_event.onclick = function() {
+          mymap.eachLayer(function(layer) {
+            mymap.removeLayer(layer)
+          });
+
+          //var mymap = L.map('mapid').setView([45.7478513, 21.2319454], 13);
+          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiZGFtaWFuMDAiLCJhIjoiY2todDdlemNhMHJmdzJybGhydXg5aTd3dSJ9.2JIcaaVIJIIDaSNkqSMQzA'
+          }).addTo(mymap);
+
+          var myIcon = L.icon({
+            iconUrl: './media/info.png',
+            iconSize: [38, 38],
+            //iconAnchor: [22, 94],
+            //popupAnchor: [-3, -76],
+          });
+
+          lat = [];
+          lng = [];
+          descriere = [];
+
+          <?php
+          $sql = "SELECT lat FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 12 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lat.push(" . $city["lat"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT lng FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 12 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lng.push(" . $city["lng"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 12 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
+              }
+            }
+          }
+          ?>
+
+          var cont = 0;
+
+          var markers = null;
+          markers = L.markerClusterGroup();
+          while (cont < lat.length) {
+            // if (tip[cont] != 'w') {
+            //   var marker = L.marker([lat[cont], lng[cont]], { icon: myIcon });
+            // }
+            // else {
+            var marker = L.marker([lat[cont], lng[cont]]);
+            // }
+
+            marker.bindPopup(String(descriere[cont]));
+
+            markers.addLayer(marker);
+
+            // var popup = L.popup()
+            // .setLatLng([lat[cont], lng[cont]])
+            // .setContent("test")
+            // .openOn(mymap);
+
+            cont++;
+          }
+
+          mymap.addLayer(markers);
+
+          return false;
+        }
+
+        var filter_today_event = document.getElementById('filter_today');
+
+        filter_today_event.onclick = function() {
+          mymap.eachLayer(function(layer) {
+            mymap.removeLayer(layer)
+          });
+
+          //var mymap = L.map('mapid').setView([45.7478513, 21.2319454], 13);
+          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiZGFtaWFuMDAiLCJhIjoiY2todDdlemNhMHJmdzJybGhydXg5aTd3dSJ9.2JIcaaVIJIIDaSNkqSMQzA'
+          }).addTo(mymap);
+
+          var myIcon = L.icon({
+            iconUrl: './media/info.png',
+            iconSize: [38, 38],
+            //iconAnchor: [22, 94],
+            //popupAnchor: [-3, -76],
+          });
+
+          lat = [];
+          lng = [];
+          descriere = [];
+
+          <?php
+          $sql = "SELECT lat FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lat.push(" . $city["lat"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT lng FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lng.push(" . $city["lng"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE EXTRACT(DAY FROM time) = EXTRACT(DAY FROM CURRENT_TIMESTAMP) AND EXTRACT(MONTH FROM time) = EXTRACT(MONTH FROM CURRENT_TIMESTAMP) AND EXTRACT(YEAR FROM time) = EXTRACT(YEAR FROM CURRENT_TIMESTAMP)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
+              }
+            }
+          }
+          ?>
+
+          var cont = 0;
+
+          var markers = null;
+          markers = L.markerClusterGroup();
+          while (cont < lat.length) {
+            // if (tip[cont] != 'w') {
+            //   var marker = L.marker([lat[cont], lng[cont]], { icon: myIcon });
+            // }
+            // else {
+            var marker = L.marker([lat[cont], lng[cont]]);
+            // }
+
+            marker.bindPopup(String(descriere[cont]));
+
+            markers.addLayer(marker);
+
+            // var popup = L.popup()
+            // .setLatLng([lat[cont], lng[cont]])
+            // .setContent("test")
+            // .openOn(mymap);
+
+            cont++;
+          }
+
+          mymap.addLayer(markers);
+
+          return false;
+        }
+
+        var filter_3day_event = document.getElementById('filter_3day');
+
+        filter_3day_event.onclick = function() {
+          mymap.eachLayer(function(layer) {
+            mymap.removeLayer(layer)
+          });
+
+          //var mymap = L.map('mapid').setView([45.7478513, 21.2319454], 13);
+          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoiZGFtaWFuMDAiLCJhIjoiY2todDdlemNhMHJmdzJybGhydXg5aTd3dSJ9.2JIcaaVIJIIDaSNkqSMQzA'
+          }).addTo(mymap);
+
+          var myIcon = L.icon({
+            iconUrl: './media/info.png',
+            iconSize: [38, 38],
+            //iconAnchor: [22, 94],
+            //popupAnchor: [-3, -76],
+          });
+
+          lat = [];
+          lng = [];
+          descriere = [];
+
+          <?php
+          $sql = "SELECT lat FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lat.push(" . $city["lat"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT lng FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "lng.push(" . $city["lng"] . ");";
+              }
+            }
+          }
+          ?>
+
+          <?php
+          $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "descriere.push('" . $city["data_senzor_1"] . " ' +' " . $city["label_data_senzor_1"] . "');";
+              }
+            }
+          }
+          ?>
+
+          var cont = 0;
+
+          var markers = null;
+          markers = L.markerClusterGroup();
+          while (cont < lat.length) {
+            // if (tip[cont] != 'w') {
+            //   var marker = L.marker([lat[cont], lng[cont]], { icon: myIcon });
+            // }
+            // else {
+            var marker = L.marker([lat[cont], lng[cont]]);
+            // }
+
+            marker.bindPopup(String(descriere[cont]));
+
+            markers.addLayer(marker);
+
+            // var popup = L.popup()
+            // .setLatLng([lat[cont], lng[cont]])
+            // .setContent("test")
+            // .openOn(mymap);
+
+            cont++;
+          }
+
+          mymap.addLayer(markers);
+
+          return false;
+        }
       </script>
 
       <script type="text/javascript">
         var ctx = document.getElementById('myChart').getContext('2d');
+        var canvas2 = document.getElementById('myChart');
 
-        var lat = [];
+        ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+        var sen_val = [];
+        var label = [];
+
         <?php
-        $sql = "SELECT data_senzor_1 FROM sensors"; // WHERE authors='".$_SESSION['email']."' ";
+        $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'pm25' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
         if ($mysqli->query($sql)) {
           $names = $mysqli->query($sql);
           if ($names->num_rows > 0) {
 
             while ($city = $names->fetch_assoc()) {
-              echo "lat.push(" . $city["data_senzor_1"] . ");";
+              echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+              echo "label.push('" . $city["time"] . "');";
             }
           }
         }
         ?>
 
-        var label = [];
-        var num = 0;
-        for (el in lat) {
-          label.push(num);
-          num += 1;
-        }
+
+        // for (el in sen_val) {
+        //   label.push("pm 2.5");
+        // }
 
 
         var chart = new Chart(ctx, {
@@ -776,17 +1206,162 @@ require 'settings.php';
           data: {
             labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
-              label: 'My First dataset',
+              label: 'PM 2.5',
               backgroundColor: 'rgb(255, 99, 132)',
               borderColor: 'rgb(255, 99, 132)',
               // data: [0, 10, 5, 2, 20, 30, 45]
-              data: lat
+              data: sen_val
             }]
           },
 
           // Configuration options go here
           options: {}
         });
+
+        var filter_pm25_event = document.getElementById('filter_pm25');
+
+        filter_pm25_event.onclick = function() {
+
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'pm25' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'PM 2.5',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_co2_event = document.getElementById('filter_co2');
+
+        filter_co2_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'co2' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'CO2',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_temp_event = document.getElementById('filter_temp');
+
+        filter_temp_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'temp' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'temp',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
       </script>
 
 
