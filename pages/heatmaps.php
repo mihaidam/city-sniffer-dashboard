@@ -458,7 +458,7 @@ require '../settings.php';
     console.log(heat_points);
 
     var heat = L.heatLayer(heat_points, {
-      radius: 25
+      radius: 10
     }).addTo(mymap);
   </script>
 
