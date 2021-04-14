@@ -74,7 +74,7 @@ require 'settings.php';
               </a>
             </li> -->
             <li class="nav-item">
-              <a class="nav-link" href="pages/heatmaps.html">
+              <a class="nav-link" href="pages/heatmaps.php">
                 <i class="ni ni-pin-3 text-primary"></i>
                 <span class="nav-link-text">Heatmaps</span>
               </a>
