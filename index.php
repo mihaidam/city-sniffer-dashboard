@@ -564,9 +564,27 @@ require 'settings.php';
                   </a>
                 </li>
                 <li class="nav-item mr-2 mr-md-0">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_co">
+                    <span class="d-none d-md-block">CO</span>
+                    <span class="d-md-none">CO</span>
+                  </a>
+                </li>
+                <li class="nav-item mr-2 mr-md-0">
                   <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_co2">
                     <span class="d-none d-md-block">CO<sub>2</sub></span>
                     <span class="d-md-none">CO<sub>2</sub></span>
+                  </a>
+                </li>
+                <li class="nav-item mr-2 mr-md-0">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_no2">
+                    <span class="d-none d-md-block">NO<sub>2</sub></span>
+                    <span class="d-md-none">NO<sub>2</sub></span>
+                  </a>
+                </li>
+                <li class="nav-item mr-2 mr-md-0">
+                  <a href="#" class="nav-link py-2 px-3" data-toggle="tab" id="filter_nh3">
+                    <span class="d-none d-md-block">NH<sub>3</sub></span>
+                    <span class="d-md-none">NH<sub>3</sub></span>
                   </a>
                 </li>
                 <li class="nav-item mr-2 mr-md-0">
@@ -1351,6 +1369,150 @@ require 'settings.php';
               labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
               datasets: [{
                 label: 'temp',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_co_event = document.getElementById('filter_co');
+
+        filter_co_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'co' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'CO',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_no2_event = document.getElementById('filter_no2');
+
+        filter_no2_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'no2' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'NO2',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                // data: [0, 10, 5, 2, 20, 30, 45]
+                data: sen_val
+              }]
+            },
+
+            // Configuration options go here
+            options: {}
+          });
+        }
+
+        var filter_nh3_event = document.getElementById('filter_nh3');
+
+        filter_nh3_event.onclick = function() {
+          ctx.clearRect(0, 0, canvas2.width, canvas2.height);
+
+          var sen_val = [];
+          var label = [];
+
+          <?php
+          $sql = "SELECT data_senzor_1, time FROM sensors WHERE label_data_senzor_1 = 'nh3' AND time >= DATE_SUB(NOW(), INTERVAL 72 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+          if ($mysqli->query($sql)) {
+            $names = $mysqli->query($sql);
+            if ($names->num_rows > 0) {
+
+              while ($city = $names->fetch_assoc()) {
+                echo "sen_val.push(" . $city["data_senzor_1"] . ");";
+                echo "label.push('" . $city["time"] . "');";
+              }
+            }
+          }
+          ?>
+
+          chart.destroy();
+
+          chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+
+
+
+            data: {
+              labels: label, //['January', 'February'], //, 'March', 'April', 'May', 'June', 'July'],
+              datasets: [{
+                label: 'NO2',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 // data: [0, 10, 5, 2, 20, 30, 45]
