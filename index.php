@@ -382,8 +382,8 @@ require 'settings.php';
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Total polution</h5>
-                      <span class="h2 font-weight-bold mb-0">49,65%</span>
+                      <h5 class="card-title text-uppercase text-muted mb-0">AQI PM2.5</h5>
+                      <span class="h2 font-weight-bold mb-0" id="total_polution_avg">49,65%</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -392,30 +392,8 @@ require 'settings.php';
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-xl-3 col-md-6">
-              <div class="card card-stats">
-                <!-- Card body -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">NO<sub>2</sub></h5>
-                      <span class="h2 font-weight-bold mb-0">49,65%</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                        <i class="ni ni-chart-bar-32"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
+                    <span class="mr-2" id="total_polution_change"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <span class="text-nowrap"></span>
                   </p>
                 </div>
               </div>
@@ -427,7 +405,7 @@ require 'settings.php';
                   <div class="row">
                     <div class="col">
                       <h5 class="card-title text-uppercase text-muted mb-0">PM2.5</h5>
-                      <span class="h2 font-weight-bold mb-0">49,65%</span>
+                      <span class="h2 font-weight-bold mb-0" id="pm25_polution_avg">49,65%</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -436,8 +414,8 @@ require 'settings.php';
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
+                    <span class="text-success mr-2" id="pm25_polution_change"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <span class="text-nowrap">Since yesterday</span>
                   </p>
                 </div>
               </div>
@@ -448,8 +426,8 @@ require 'settings.php';
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">CO</h5>
-                      <span class="h2 font-weight-bold mb-0">49,65%</span>
+                      <h5 class="card-title text-uppercase text-muted mb-0">CO<sub>2</sub></h5>
+                      <span class="h2 font-weight-bold mb-0" id="co2_polution_avg">49,65%</span>
                     </div>
                     <div class="col-auto">
                       <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -458,8 +436,30 @@ require 'settings.php';
                     </div>
                   </div>
                   <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Since last month</span>
+                    <span class="text-success mr-2" id="co2_polution_change"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <span class="text-nowrap">Since yesterday</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+              <div class="card card-stats">
+                <!-- Card body -->
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <h5 class="card-title text-uppercase text-muted mb-0">Temperature</h5>
+                      <span class="h2 font-weight-bold mb-0" id="temp_polution_avg">49,65%</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                        <i class="ni ni-chart-bar-32"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="mt-3 mb-0 text-sm">
+                    <span class="text-success mr-2" id="temp_polution_change"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                    <span class="text-nowrap">Since yesterday</span>
                   </p>
                 </div>
               </div>
@@ -713,6 +713,217 @@ require 'settings.php';
       <script src="assets/js/argon.js?v=1.2.0"></script>
       <!-- Chart JS -->
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+      <script type="text/javascript">
+        pol_pm25 = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND label_data_senzor_1 = 'pm25'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_pm25.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        avg_pm25 = 0.0;
+        for (i = 0; i < pol_pm25.length; i++) {
+          avg_pm25 += parseFloat(pol_pm25[i]);
+        }
+
+        avg_pm25 /= pol_pm25.length;
+
+        document.getElementById("pm25_polution_avg").innerHTML = avg_pm25.toFixed(5) + " µg/m³";
+
+        pol_pm25_y = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND time <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND label_data_senzor_1 = 'pm25'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_pm25_y.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        avg_pm25_y = 0.0;
+        for (i = 0; i < pol_pm25_y.length; i++) {
+          avg_pm25_y += parseFloat(pol_pm25_y[i]);
+        }
+
+        avg_pm25_y /= pol_pm25_y.length;
+
+        change_pm25 = avg_pm25_y - avg_pm25;
+
+        if (change_pm25 > 0) {
+          document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_pm25.toFixed(5) + " µg/m³";
+        } else {
+          change_pm25 = -1 * change_pm25;
+          document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_pm25.toFixed(5) + " µg/m³";
+        }
+
+
+        pol_co2 = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND label_data_senzor_1 = 'co2'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_co2.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        avg_co2 = 0.0;
+        for (i = 0; i < pol_co2.length; i++) {
+          avg_co2 += parseFloat(pol_co2[i]);
+        }
+
+        avg_co2 /= pol_co2.length;
+
+        document.getElementById("co2_polution_avg").innerHTML = avg_co2.toFixed(5) + " ppm";
+
+        pol_co2_y = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND time <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND label_data_senzor_1 = 'co2'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_co2_y.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        avg_co2_y = 0.0;
+        for (i = 0; i < pol_co2_y.length; i++) {
+          avg_co2_y += parseFloat(pol_co2_y[i]);
+        }
+
+        avg_co2_y /= pol_co2_y.length;
+
+        change_co2 = avg_co2_y - avg_co2;
+
+        if (change_co2 > 0) {
+          document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_co2.toFixed(5) + " ppm";
+        } else {
+          change_co2 = -1 * change_co2;
+          document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_co2.toFixed(5) + " ppm";
+        }
+
+        pol_temp = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND label_data_senzor_1 = 'temp'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_temp.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        avg_temp = 0.0;
+        for (i = 0; i < pol_temp.length; i++) {
+          avg_temp += parseFloat(pol_temp[i]);
+        }
+        avg_temp /= pol_temp.length;
+
+        document.getElementById("temp_polution_avg").innerHTML = avg_temp.toFixed(5) + " °C";
+
+        pol_temp_y = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 48 HOUR) AND time <= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND label_data_senzor_1 = 'temp'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_temp_y.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        avg_temp_y = 0.0;
+        for (i = 0; i < pol_temp_y.length; i++) {
+          avg_temp_y += parseFloat(pol_temp_y[i]);
+        }
+
+        avg_temp_y /= pol_temp_y.length;
+
+        change_temp = avg_temp_y - avg_temp;
+
+        if (change_temp > 0) {
+          document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_temp.toFixed(5) + " °C";
+        } else {
+          change_temp = -1 * change_temp;
+          document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_temp.toFixed(5) + " °C";
+        }
+
+        avg_tot = avg_co2 + avg_pm25;
+
+        avg_tot /= 2;
+
+        // document.getElementById("total_polution_avg").innerHTML = avg_tot.toFixed(5) + " µg/m³";
+
+        if (avg_pm25 < 10)
+          avg_tot = "1 - good";
+        else if (avg_pm25 < 20)
+          avg_tot = "2 - acceptable";
+        else if (avg_pm25 < 25)
+          avg_tot = "3 - moderate";
+        else if (avg_pm25 < 50)
+          avg_tot = "4 - bad";
+        else if (avg_pm25 < 75)
+          avg_tot = "5 - very bad";
+        else if (avg_pm25 >= 75)
+          avg_tot = "6 - extremely bad";
+
+        document.getElementById("total_polution_avg").innerHTML = avg_tot;
+
+        if (avg_pm25_y < 10)
+          avg_tot_y = "1 - good";
+        else if (avg_pm25_y < 20)
+          avg_tot_y = "2 - acceptable";
+        else if (avg_pm25_y < 25)
+          avg_tot_y = "3 - moderate";
+        else if (avg_pm25_y < 50)
+          avg_tot_y = "4 - bad";
+        else if (avg_pm25_y < 75)
+          avg_tot_y = "5 - very bad";
+        else if (avg_pm25_y >= 75)
+          avg_tot_y = "6 - extremely bad";
+
+        if (avg_tot_y[0] > avg_tot[0]) {
+          document.getElementById("total_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i> From " + avg_tot_y + " yesterday";
+        }
+        else if (avg_tot_y[0] < avg_tot[0]) {
+          document.getElementById("total_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i> From " + avg_tot_y + " yesterday";
+        }
+        else {
+          document.getElementById("total_polution_change").innerHTML = "Same";
+        }
+      </script>
 
       <script type="text/javascript">
         var mymap = L.map('mapid').setView([45.7478513, 21.2319454], 13);
