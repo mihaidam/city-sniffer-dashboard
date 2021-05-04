@@ -76,7 +76,7 @@ require '../settings.php';
               </a>
             </li> -->
             <li class="nav-item">
-              <a class="nav-link active" href="../pages/heatmaps.php">
+              <a class="nav-link" href="../pages/heatmaps.php">
                 <i class="ni ni-pin-3 text-primary"></i>
                 <span class="nav-link-text">Heatmap PM2.5</span>
               </a>
@@ -88,7 +88,7 @@ require '../settings.php';
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="../pages/heatmaps_co2.php">
+              <a class="nav-link active" href="../pages/heatmaps_co2.php">
                 <i class="ni ni-pin-3 text-primary"></i>
                 <span class="nav-link-text">Heatmap CO<sub>2</sub></span>
               </a>
@@ -447,7 +447,7 @@ require '../settings.php';
     lng = [];
 
     <?php
-    $sql = "SELECT data_senzor_1, lat, lng, time FROM sensors WHERE label_data_senzor_1 = 'pm25' AND time >= DATE_SUB(NOW(), INTERVAL 12 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
+    $sql = "SELECT data_senzor_1, lat, lng, time FROM sensors WHERE label_data_senzor_1 = 'co2' AND time >= DATE_SUB(NOW(), INTERVAL 12 HOUR)"; // WHERE authors='".$_SESSION['email']."' ";
     if ($mysqli->query($sql)) {
       $names = $mysqli->query($sql);
       if ($names->num_rows > 0) {
