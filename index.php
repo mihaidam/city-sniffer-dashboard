@@ -616,7 +616,7 @@ require 'settings.php';
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
-                    <th scope="col">Pollutant</th>
+                    <th scope="col">Data</th>
                     <th scope="col">356 day total</th>
                     <th scope="col">Today</th>
                     <th scope="col">Change since yesterday</th>
@@ -625,43 +625,43 @@ require 'settings.php';
                 <tbody>
                   <tr>
                     <th scope="row">
-                      NO<sub>2</sub>
+                      PM2.5
                     </th>
-                    <td>
+                    <td id="pm25_polution_sum_table">
                       4,569
                     </td>
-                    <td>
+                    <td id="pm25_polution_avg_table">
                       340
                     </td>
-                    <td>
+                    <td id="pm25_polution_change_table">
                       <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
                     </td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      PM2.5
+                      CO<sub>2</sub>
                     </th>
-                    <td>
+                    <td id="co2_polution_sum_table">
                       3,985
                     </td>
-                    <td>
+                    <td id="co2_polution_avg_table">
                       319
                     </td>
-                    <td>
+                    <td id="co2_polution_change_table">
                       <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
                     </td>
                   </tr>
                   <tr>
                     <th scope="row">
-                      CO
+                      Temperature
                     </th>
-                    <td>
+                    <td id="temp_polution_sum_table">
                       3,513
                     </td>
-                    <td>
+                    <td id="temp_polution_avg_table">
                       294
                     </td>
-                    <td>
+                    <td id="temp_polution_change_table">
                       <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
                     </td>
                   </tr>
@@ -738,6 +738,7 @@ require 'settings.php';
         avg_pm25 /= pol_pm25.length;
 
         document.getElementById("pm25_polution_avg").innerHTML = avg_pm25.toFixed(5) + " µg/m³";
+        document.getElementById("pm25_polution_avg_table").innerHTML = avg_pm25.toFixed(5) + " µg/m³";
 
         pol_pm25_y = [];
 
@@ -765,11 +766,34 @@ require 'settings.php';
 
         if (change_pm25 > 0) {
           document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_pm25.toFixed(5) + " µg/m³";
+          document.getElementById("pm25_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_pm25.toFixed(5) + " µg/m³";
         } else {
           change_pm25 = -1 * change_pm25;
           document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_pm25.toFixed(5) + " µg/m³";
+          document.getElementById("pm25_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_pm25.toFixed(5) + " µg/m³";
         }
 
+        pol_pm25_sum = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 12 MONTH) AND label_data_senzor_1 = 'pm25'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_pm25_sum.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        sum_pm25 = 0.0;
+        for (i = 0; i < pol_pm25_sum.length; i++) {
+          sum_pm25 += parseFloat(pol_pm25_sum[i]);
+        }
+
+        document.getElementById("pm25_polution_sum_table").innerHTML = sum_pm25.toFixed(5) + " µg/m³";
 
         pol_co2 = [];
 
@@ -794,6 +818,7 @@ require 'settings.php';
         avg_co2 /= pol_co2.length;
 
         document.getElementById("co2_polution_avg").innerHTML = avg_co2.toFixed(5) + " ppm";
+        document.getElementById("co2_polution_avg_table").innerHTML = avg_co2.toFixed(5) + " ppm";
 
         pol_co2_y = [];
 
@@ -821,10 +846,34 @@ require 'settings.php';
 
         if (change_co2 > 0) {
           document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_co2.toFixed(5) + " ppm";
+          document.getElementById("co2_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_co2.toFixed(5) + " ppm";
         } else {
           change_co2 = -1 * change_co2;
           document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_co2.toFixed(5) + " ppm";
+          document.getElementById("co2_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_co2.toFixed(5) + " ppm";
         }
+
+        pol_co2_sum = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 12 MONTH) AND label_data_senzor_1 = 'co2'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_co2_sum.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        sum_co2 = 0.0;
+        for (i = 0; i < pol_co2_sum.length; i++) {
+          sum_co2 += parseFloat(pol_co2_sum[i]);
+        }
+
+        document.getElementById("co2_polution_sum_table").innerHTML = sum_co2.toFixed(5) + " µg/m³";
 
         pol_temp = [];
 
@@ -848,6 +897,7 @@ require 'settings.php';
         avg_temp /= pol_temp.length;
 
         document.getElementById("temp_polution_avg").innerHTML = avg_temp.toFixed(5) + " °C";
+        document.getElementById("temp_polution_avg_table").innerHTML = avg_temp.toFixed(5) + " °C";
 
         pol_temp_y = [];
 
@@ -875,10 +925,36 @@ require 'settings.php';
 
         if (change_temp > 0) {
           document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_temp.toFixed(5) + " °C";
+          document.getElementById("temp_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_temp.toFixed(5) + " °C";
         } else {
           change_temp = -1 * change_temp;
           document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_temp.toFixed(5) + " °C";
+          document.getElementById("temp_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_temp.toFixed(5) + " °C";
         }
+
+        pol_temp_sum = [];
+
+        <?php
+        $sql = "SELECT data_senzor_1, label_data_senzor_1 FROM sensors WHERE time >= DATE_SUB(NOW(), INTERVAL 12 MONTH) AND label_data_senzor_1 = 'temp'"; // WHERE authors='".$_SESSION['email']."' ";
+        if ($mysqli->query($sql)) {
+          $names = $mysqli->query($sql);
+          if ($names->num_rows > 0) {
+
+            while ($city = $names->fetch_assoc()) {
+              echo "pol_temp_sum.push('" . $city["data_senzor_1"] . "');";
+            }
+          }
+        }
+        ?>
+
+        sum_temp = 0.0;
+        for (i = 0; i < pol_temp_sum.length; i++) {
+          sum_temp += parseFloat(pol_temp_sum[i]);
+        }
+
+        sum_temp /= pol_temp_sum.length;
+
+        document.getElementById("temp_polution_sum_table").innerHTML = "avg. " + sum_temp.toFixed(5) + " °C";
 
         avg_tot = avg_co2 + avg_pm25;
 
@@ -916,11 +992,9 @@ require 'settings.php';
 
         if (avg_tot_y[0] > avg_tot[0]) {
           document.getElementById("total_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i> From " + avg_tot_y + " yesterday";
-        }
-        else if (avg_tot_y[0] < avg_tot[0]) {
+        } else if (avg_tot_y[0] < avg_tot[0]) {
           document.getElementById("total_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i> From " + avg_tot_y + " yesterday";
-        }
-        else {
+        } else {
           document.getElementById("total_polution_change").innerHTML = "Same";
         }
       </script>
