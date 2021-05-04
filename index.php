@@ -51,7 +51,7 @@ require 'settings.php';
     <div class="scrollbar-inner">
       <!-- Brand -->
       <div class="sidenav-header  align-items-center">
-        <a class="navbar-brand" href="./index.html">
+        <a class="navbar-brand" href="./index.php">
           <img src="assets/img/brand/city_sniffer.png" class="navbar-brand-img">
         </a>
       </div>
@@ -62,7 +62,7 @@ require 'settings.php';
           <ul class="navbar-nav">
             <li class="nav-item">
               <!-- <a class="nav-link active" href="examples/dashboard.html"> -->
-              <a class="nav-link active" href="index.html">
+              <a class="nav-link active" href="index.php">
                 <i class="ni ni-tv-2 text-primary"></i>
                 <span class="nav-link-text">Dashboard</span>
               </a>
@@ -76,7 +76,31 @@ require 'settings.php';
             <li class="nav-item">
               <a class="nav-link" href="pages/heatmaps.php">
                 <i class="ni ni-pin-3 text-primary"></i>
-                <span class="nav-link-text">Heatmaps</span>
+                <span class="nav-link-text">Heatmap PM2.5</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pages/heatmaps_co.php">
+                <i class="ni ni-pin-3 text-primary"></i>
+                <span class="nav-link-text">Heatmap CO</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pages/heatmaps_co2.php">
+                <i class="ni ni-pin-3 text-primary"></i>
+                <span class="nav-link-text">Heatmap CO<sub>2</sub></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pages/heatmaps_no2.php">
+                <i class="ni ni-pin-3 text-primary"></i>
+                <span class="nav-link-text">Heatmap NO<sub>2</sub></span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="pages/heatmaps_nh3.php">
+                <i class="ni ni-pin-3 text-primary"></i>
+                <span class="nav-link-text">Heatmap NH<sub>3</sub></span>
               </a>
             </li>
             <!-- <li class="nav-item">
