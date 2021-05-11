@@ -761,8 +761,8 @@ require 'settings.php';
 
         avg_pm25 /= pol_pm25.length;
 
-        document.getElementById("pm25_polution_avg").innerHTML = avg_pm25.toFixed(5) + " µg/m³";
-        document.getElementById("pm25_polution_avg_table").innerHTML = avg_pm25.toFixed(5) + " µg/m³";
+        document.getElementById("pm25_polution_avg").innerHTML = avg_pm25.toFixed(2) + " µg/m³";
+        document.getElementById("pm25_polution_avg_table").innerHTML = avg_pm25.toFixed(2) + " µg/m³";
 
         pol_pm25_y = [];
 
@@ -789,12 +789,12 @@ require 'settings.php';
         change_pm25 = avg_pm25_y - avg_pm25;
 
         if (change_pm25 > 0) {
-          document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_pm25.toFixed(5) + " µg/m³";
-          document.getElementById("pm25_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_pm25.toFixed(5) + " µg/m³";
+          document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_pm25.toFixed(2) + " µg/m³";
+          document.getElementById("pm25_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_pm25.toFixed(2) + " µg/m³";
         } else {
           change_pm25 = -1 * change_pm25;
-          document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_pm25.toFixed(5) + " µg/m³";
-          document.getElementById("pm25_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_pm25.toFixed(5) + " µg/m³";
+          document.getElementById("pm25_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_pm25.toFixed(2) + " µg/m³";
+          document.getElementById("pm25_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_pm25.toFixed(2) + " µg/m³";
         }
 
         pol_pm25_sum = [];
@@ -817,7 +817,7 @@ require 'settings.php';
           sum_pm25 += parseFloat(pol_pm25_sum[i]);
         }
 
-        document.getElementById("pm25_polution_sum_table").innerHTML = sum_pm25.toFixed(5) + " µg/m³";
+        document.getElementById("pm25_polution_sum_table").innerHTML = sum_pm25.toFixed(2) + " µg/m³";
 
         pol_co2 = [];
 
@@ -841,8 +841,8 @@ require 'settings.php';
 
         avg_co2 /= pol_co2.length;
 
-        document.getElementById("co2_polution_avg").innerHTML = avg_co2.toFixed(5) + " ppm";
-        document.getElementById("co2_polution_avg_table").innerHTML = avg_co2.toFixed(5) + " ppm";
+        document.getElementById("co2_polution_avg").innerHTML = avg_co2.toFixed(2) + " ppm";
+        document.getElementById("co2_polution_avg_table").innerHTML = avg_co2.toFixed(2) + " ppm";
 
         pol_co2_y = [];
 
@@ -869,12 +869,12 @@ require 'settings.php';
         change_co2 = avg_co2_y - avg_co2;
 
         if (change_co2 > 0) {
-          document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_co2.toFixed(5) + " ppm";
-          document.getElementById("co2_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_co2.toFixed(5) + " ppm";
+          document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_co2.toFixed(2) + " ppm";
+          document.getElementById("co2_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_co2.toFixed(2) + " ppm";
         } else {
           change_co2 = -1 * change_co2;
-          document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_co2.toFixed(5) + " ppm";
-          document.getElementById("co2_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_co2.toFixed(5) + " ppm";
+          document.getElementById("co2_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_co2.toFixed(2) + " ppm";
+          document.getElementById("co2_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_co2.toFixed(2) + " ppm";
         }
 
         pol_co2_sum = [];
@@ -897,7 +897,7 @@ require 'settings.php';
           sum_co2 += parseFloat(pol_co2_sum[i]);
         }
 
-        document.getElementById("co2_polution_sum_table").innerHTML = sum_co2.toFixed(5) + " µg/m³";
+        document.getElementById("co2_polution_sum_table").innerHTML = sum_co2.toFixed(2) + " µg/m³";
 
         pol_temp = [];
 
@@ -920,8 +920,8 @@ require 'settings.php';
         }
         avg_temp /= pol_temp.length;
 
-        document.getElementById("temp_polution_avg").innerHTML = avg_temp.toFixed(5) + " °C";
-        document.getElementById("temp_polution_avg_table").innerHTML = avg_temp.toFixed(5) + " °C";
+        document.getElementById("temp_polution_avg").innerHTML = avg_temp.toFixed(2) + " °C";
+        document.getElementById("temp_polution_avg_table").innerHTML = avg_temp.toFixed(2) + " °C";
 
         pol_temp_y = [];
 
@@ -948,12 +948,12 @@ require 'settings.php';
         change_temp = avg_temp_y - avg_temp;
 
         if (change_temp > 0) {
-          document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_temp.toFixed(5) + " °C";
-          document.getElementById("temp_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_temp.toFixed(5) + " °C";
+          document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-up text-warning'></i>" + change_temp.toFixed(2) + " °C";
+          document.getElementById("temp_polution_change_table").innerHTML = "<i class='fas fa-arrow-up text-warning mr-3'></i>" + change_temp.toFixed(2) + " °C";
         } else {
           change_temp = -1 * change_temp;
-          document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_temp.toFixed(5) + " °C";
-          document.getElementById("temp_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_temp.toFixed(5) + " °C";
+          document.getElementById("temp_polution_change").innerHTML = "<i class='fa fa-arrow-down'></i>" + change_temp.toFixed(2) + " °C";
+          document.getElementById("temp_polution_change_table").innerHTML = "<i class='fas fa-arrow-down text-successs mr-3'></i>" + change_temp.toFixed(2) + " °C";
         }
 
         pol_temp_sum = [];
@@ -978,13 +978,13 @@ require 'settings.php';
 
         sum_temp /= pol_temp_sum.length;
 
-        document.getElementById("temp_polution_sum_table").innerHTML = "avg. " + sum_temp.toFixed(5) + " °C";
+        document.getElementById("temp_polution_sum_table").innerHTML = "avg. " + sum_temp.toFixed(2) + " °C";
 
         avg_tot = avg_co2 + avg_pm25;
 
         avg_tot /= 2;
 
-        // document.getElementById("total_polution_avg").innerHTML = avg_tot.toFixed(5) + " µg/m³";
+        // document.getElementById("total_polution_avg").innerHTML = avg_tot.toFixed(2) + " µg/m³";
 
         if (avg_pm25 < 10)
           avg_tot = "1 - good";
